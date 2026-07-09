@@ -139,38 +139,71 @@ export function FAQSection() {
         </div>
 
         {/* Support Callout Footer */}
-        <div className="mt-12 bg-[#161616] border border-[#333] rounded-sm p-6 max-w-2xl mx-auto font-sans text-center">
-          <p className="text-sm font-bold text-slate-200 mb-2">Direct Partner Support Channels</p>
-          <p className="text-xs text-slate-400 mb-6">
-            Have a custom promotion idea, request for high-volume sponsorships, or need technical help? Contact us directly.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-            <a 
-              href="mailto:mytechdealszone@gmail.com" 
-              className="flex flex-col items-center gap-2 p-4 bg-[#111] border border-[#222] hover:border-gold/30 rounded-sm text-xs text-slate-300 hover:text-white transition-all cursor-pointer"
-            >
-              <Mail className="w-5 h-5 text-gold" />
-              <span className="font-bold uppercase tracking-wider text-[10px]">Email Support</span>
-              <span className="text-[10px] text-slate-500 font-mono">mytechdealszone@gmail.com</span>
-            </a>
-            <a 
-              href="tel:+447445876709" 
-              className="flex flex-col items-center gap-2 p-4 bg-[#111] border border-[#222] hover:border-gold/30 rounded-sm text-xs text-slate-300 hover:text-white transition-all cursor-pointer"
-            >
-              <Phone className="w-5 h-5 text-gold" />
-              <span className="font-bold uppercase tracking-wider text-[10px]">Direct Call</span>
-              <span className="text-[10px] text-slate-500 font-mono">+44 7445 876709</span>
-            </a>
-            <a 
-              href="https://wa.me/27791952410" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-col items-center gap-2 p-4 bg-[#111] border border-[#222] hover:border-gold/30 rounded-sm text-xs text-slate-300 hover:text-white transition-all cursor-pointer"
-            >
-              <MessageSquare className="w-5 h-5 text-gold" />
-              <span className="font-bold uppercase tracking-wider text-[10px]">WhatsApp Chat</span>
-              <span className="text-[10px] text-slate-500 font-mono">+27 79 195 2410</span>
-            </a>
+        <div className="mt-16 relative overflow-hidden bg-gradient-to-b from-[#111] to-[#0d0d0d] border border-gold/20 rounded-md p-8 max-w-2xl mx-auto font-sans shadow-2xl">
+          {/* Subtle gold glow effect */}
+          <div className="absolute -top-24 -left-24 w-48 h-48 bg-gold/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-gold/5 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 text-center">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-sm bg-gold/10 border border-gold/30 text-[9px] font-mono tracking-widest text-gold uppercase font-bold mb-4">
+              VIP Support
+            </span>
+            <h4 className="text-lg md:text-xl font-serif italic uppercase text-[#F5F5F5] mb-2 tracking-tight">
+              Direct Partner Support Channels
+            </h4>
+            <p className="text-xs text-slate-400 max-w-md mx-auto mb-8 leading-relaxed">
+              Have a custom promotion idea, need high-volume assets, or want to discuss a dedicated sponsorship? Reach out to us instantly through our priority contact lines.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* WhatsApp Button */}
+              <a 
+                href="https://wa.me/27791952410" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center gap-3 p-4 bg-black/60 border border-[#222] hover:border-gold/40 rounded-sm transition-all duration-300 hover:-translate-y-0.5"
+              >
+                <div className="w-10 h-10 rounded-full bg-gold/5 border border-gold/20 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-all duration-300">
+                  <MessageSquare className="w-5 h-5 stroke-[1.5]" />
+                </div>
+                <div className="text-center">
+                  <span className="block font-bold text-xs uppercase tracking-wider text-slate-200 group-hover:text-gold transition-colors">WhatsApp Chat</span>
+                  <span className="text-[10px] text-slate-500 font-mono mt-0.5 block">+27 79 195 2410</span>
+                </div>
+              </a>
+
+              {/* Phone Button */}
+              <a 
+                href="tel:+447445876709" 
+                className="group flex flex-col items-center gap-3 p-4 bg-black/60 border border-[#222] hover:border-gold/40 rounded-sm transition-all duration-300 hover:-translate-y-0.5"
+              >
+                <div className="w-10 h-10 rounded-full bg-gold/5 border border-gold/20 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-all duration-300">
+                  <Phone className="w-5 h-5 stroke-[1.5]" />
+                </div>
+                <div className="text-center">
+                  <span className="block font-bold text-xs uppercase tracking-wider text-slate-200 group-hover:text-gold transition-colors">Call Support</span>
+                  <span className="text-[10px] text-slate-500 font-mono mt-0.5 block">+44 7445 876709</span>
+                </div>
+              </a>
+
+              {/* Email Button */}
+              <a 
+                href="mailto:mytechdealszone@gmail.com" 
+                className="group flex flex-col items-center gap-3 p-4 bg-black/60 border border-[#222] hover:border-gold/40 rounded-sm transition-all duration-300 hover:-translate-y-0.5"
+              >
+                <div className="w-10 h-10 rounded-full bg-gold/5 border border-gold/20 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-all duration-300">
+                  <Mail className="w-5 h-5 stroke-[1.5]" />
+                </div>
+                <div className="text-center">
+                  <span className="block font-bold text-xs uppercase tracking-wider text-slate-200 group-hover:text-gold transition-colors">Email Support</span>
+                  <span className="text-[10px] text-slate-500 font-mono mt-0.5 block">mytechdealszone@gmail.com</span>
+                </div>
+              </a>
+            </div>
+
+            <p className="text-[9px] text-slate-600 font-mono mt-6 uppercase tracking-wider">
+              ⚡ Response Time: under 1 hour for active partners
+            </p>
           </div>
         </div>
 
