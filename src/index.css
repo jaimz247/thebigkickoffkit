@@ -90,3 +90,506 @@ html {
   background: #D4AF37;
 }
 
+/* ==========================================
+   LIGHT MODE STYLING OVERRIDES (VIBRANT CONTRAST)
+   ========================================== */
+html.light {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+html.light body {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+html.light header {
+  background-color: rgba(248, 250, 252, 0.8) !important;
+  border-bottom-color: #E2E8F0 !important;
+}
+
+html.light .min-h-screen {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+/* Background Overrides for Dark Hexes */
+html.light .bg-\[\#0A0A0A\] {
+  background-color: #F8FAFC !important;
+}
+
+html.light .bg-\[\#0A0A0A\]\/80 {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+html.light .bg-\[\#0A0A0A\]\/95 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light .bg-\[\#0A0A0A\]\/20 {
+  background-color: #F1F5F9 !important;
+}
+
+html.light .bg-\[\#0d0d0d\] {
+  background-color: #F1F5F9 !important;
+}
+
+html.light .bg-\[\#0F0F0F\] {
+  background-color: #F1F5F9 !important;
+}
+
+html.light .bg-\[\#111111\] {
+  background-color: #F8FAFC !important;
+}
+
+html.light .bg-\[\#111\] {
+  background-color: #F1F5F9 !important;
+}
+
+html.light .bg-\[\#121212\] {
+  background-color: #FFFFFF !important;
+}
+
+html.light .bg-\[\#161616\] {
+  background-color: #FFFFFF !important;
+}
+
+html.light .bg-\[\#181818\] {
+  background-color: #F1F5F9 !important;
+}
+
+html.light .bg-\[\#1e1e1e\] {
+  background-color: #F1F5F9 !important;
+}
+
+html.light .bg-panel {
+  background-color: #FFFFFF !important;
+}
+
+/* Panel Override */
+html.light .panel {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02) !important;
+}
+
+/* Border Overrides */
+html.light .border-\[\#333\] {
+  border-color: #E2E8F0 !important;
+}
+
+html.light .border-\[\#222\] {
+  border-color: #E2E8F0 !important;
+}
+
+html.light .border-\[\#444\] {
+  border-color: #CBD5E1 !important;
+}
+
+html.light .border-\[\#555\] {
+  border-color: #CBD5E1 !important;
+}
+
+html.light .border-\[\#111\] {
+  border-color: #E2E8F0 !important;
+}
+
+/* Specific text color overrides to ensure readability */
+html.light .text-\[\#F5F5F5\] {
+  color: #0F172A !important;
+}
+
+html.light .text-\[\#A0A0A0\] {
+  color: #475569 !important;
+}
+
+html.light .text-slate-100 {
+  color: #0F172A !important;
+}
+
+html.light .text-slate-200 {
+  color: #1E293B !important;
+}
+
+html.light .text-slate-300 {
+  color: #334155 !important;
+}
+
+html.light .text-slate-400 {
+  color: #475569 !important;
+}
+
+html.light .text-slate-500 {
+  color: #64748B !important;
+}
+
+/* Badge Component */
+html.light .badge {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border-color: #CBD5E1 !important;
+  color: #475569 !important;
+}
+
+/* Earnings display ledger */
+html.light .lg\:col-span-5.panel.border-gold {
+  background: #FFFFFF !important;
+  box-shadow: 0 20px 40px -15px rgba(212, 175, 55, 0.15), 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Announcement Top Bar */
+html.light .bg-\[\#1a0f0f\] {
+  background-color: #FFF1F2 !important;
+  border-bottom-color: #FECDD3 !important;
+}
+html.light .text-red-400 {
+  color: #E11D48 !important;
+}
+
+/* Specific button styles */
+html.light a.block.bg-\[\#0A0A0A\] {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+html.light a.block.bg-\[\#0A0A0A\]:hover {
+  background-color: #E2E8F0 !important;
+}
+
+html.light button.bg-\[\#0A0A0A\] {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+html.light button.bg-\[\#0A0A0A\]:hover {
+  background-color: #E2E8F0 !important;
+}
+
+html.light .cta-btn {
+  background: #D4AF37 !important;
+  color: #0A0A0A !important;
+}
+html.light .cta-btn:hover {
+  background: #B48F17 !important;
+  color: #FFFFFF !important;
+}
+
+/* Slider Controls */
+html.light input[type="range"] {
+  background-color: #E2E8F0 !important;
+}
+
+/* Scrollbars in light mode */
+html.light ::-webkit-scrollbar-track {
+  background: #F8FAFC !important;
+}
+html.light ::-webkit-scrollbar-thumb {
+  background: #E2E8F0 !important;
+  border-color: #CBD5E1 !important;
+}
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #D4AF37 !important;
+}
+
+/* Background gradient / radial decorations */
+html.light .bg-gold\/5 {
+  background-color: rgba(212, 175, 55, 0.03) !important;
+}
+html.light .bg-emerald-600\/5 {
+  background-color: rgba(16, 185, 129, 0.03) !important;
+}
+
+/* Tables and Dividing Borders */
+html.light tbody.divide-y.divide-\[\#333\]\/60 {
+  border-color: #E2E8F0 !important;
+}
+html.light .divide-y.divide-\[\#333\]\/60 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #E2E8F0 !important;
+}
+html.light .divide-y.divide-\[\#333\]\/80 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #E2E8F0 !important;
+}
+html.light .divide-y.divide-\[\#333\]\/40 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #E2E8F0 !important;
+}
+
+html.light th {
+  color: #475569 !important;
+}
+html.light tr {
+  border-bottom-color: #E2E8F0 !important;
+}
+html.light td {
+  color: #334155 !important;
+}
+
+/* FAQ Items */
+html.light .bg-\[\#121212\]\/40 {
+  background-color: rgba(241, 245, 249, 0.4) !important;
+}
+
+
+/* ==========================================
+   LIGHT MODE ENHANCEMENTS
+   ========================================== */
+.light {
+  background-color: #F8FAFC !important;
+  color: #1E293B !important;
+}
+
+.light html,
+.light body,
+.light .min-h-screen {
+  background-color: #F8FAFC !important;
+  color: #1E293B !important;
+}
+
+/* Header & Announcements */
+.light header {
+  background-color: rgba(248, 250, 252, 0.8) !important;
+  border-color: #E2E8F0 !important;
+}
+
+.light .bg-[#1a0f0f] {
+  background-color: #FEF2F2 !important;
+  border-color: #FCA5A5 !important;
+  color: #991B1B !important;
+}
+
+.light .text-slate-300 {
+  color: #475569 !important;
+}
+
+/* Base backgrounds & panels */
+.light .bg-[#0A0A0A],
+.light .bg-[#0F0F0F],
+.light .bg-black {
+  background-color: #F1F5F9 !important;
+}
+
+.light .bg-[#0A0A0A]\/40 {
+  background-color: rgba(241, 245, 249, 0.4) !important;
+}
+
+.light .bg-panel,
+.light .panel,
+.light .bg-[#161616],
+.light .bg-[#111],
+.light .bg-[#121212],
+.light .bg-[#181818] {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #1E293B !important;
+}
+
+/* Specific section overrides */
+.light section,
+.light footer {
+  border-color: #E2E8F0 !important;
+}
+
+/* Borders */
+.light .border-[#333],
+.light .border-[#222],
+.light .border-[#444],
+.light .border-slate-800,
+.light .border-slate-700\/50,
+.light .border-slate-800\/80 {
+  border-color: #E2E8F0 !important;
+}
+
+/* Text overrides */
+.light .text-[#F5F5F5],
+.light .text-white,
+.light .text-slate-100,
+.light .text-slate-200 {
+  color: #0F172A !important;
+}
+
+.light .text-[#A0A0A0],
+.light .text-slate-400,
+.light .text-slate-300,
+.light .text-slate-500 {
+  color: #475569 !important;
+}
+
+.light .text-slate-500 {
+  color: #64748B !important;
+}
+
+.light .text-slate-600 {
+  color: #475569 !important;
+}
+
+.light .text-emerald-400 {
+  color: #15803D !important;
+}
+
+.light .text-red-400 {
+  color: #DC2626 !important;
+}
+
+/* Sliders and fields */
+.light input[type="range"] {
+  background-color: #E2E8F0 !important;
+}
+
+.light input[type="text"],
+.light input[type="email"],
+.light select,
+.light textarea {
+  background-color: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+.light input[type="text"]::placeholder,
+.light input[type="email"]::placeholder {
+  color: #94A3B8 !important;
+}
+
+.light .bg-[#0A0A0A]\/80 {
+  background-color: rgba(241, 245, 249, 0.8) !important;
+}
+
+/* Badges & Accents */
+.light .badge {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #475569 !important;
+}
+
+.light .badge.text-gold {
+  color: #B45309 !important;
+}
+
+.light .border-gold\/20,
+.light .border-gold\/30,
+.light .border-gold\/40,
+.light .border-gold\/50 {
+  border-color: rgba(212, 175, 55, 0.4) !important;
+}
+
+/* Tables */
+.light table,
+.light th,
+.light td {
+  border-color: #E2E8F0 !important;
+}
+
+.light th {
+  background-color: #F1F5F9 !important;
+  color: #1E293B !important;
+}
+
+.light tr:hover {
+  background-color: #F8FAFC !important;
+}
+
+/* Copy buttons and boxes */
+.light .bg-gold\/10 {
+  background-color: rgba(212, 175, 55, 0.1) !important;
+}
+
+.light .text-gold {
+  color: #B45309 !important;
+}
+
+.light .gold-gradient {
+  background: linear-gradient(135deg, #B45309 0%, #D4AF37 50%, #B45309 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* Quick Action Overlay (Mobile) & Floating Dialogs */
+.light .pointer-events-auto.panel {
+  background-color: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.light .bg-[#181818] {
+  background-color: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+}
+
+.light .bg-[#222]:hover {
+  background-color: #F1F5F9 !important;
+}
+
+.light .bg-emerald-950\/10 {
+  background-color: #F0FDF4 !important;
+  border-color: #BBF7D0 !important;
+}
+
+.light .bg-amber-950\/10 {
+  background-color: #FEF3C7 !important;
+  border-color: #FDE68A !important;
+}
+
+.light .bg-[#161616] {
+  background-color: #FFFFFF !important;
+}
+
+.light .bg-[#121b15] {
+  background-color: #F0FDF4 !important;
+  border-color: #BBF7D0 !important;
+}
+
+.light .bg-[#0d1624] {
+  background-color: #F0F9FF !important;
+  border-color: #BAE6FD !important;
+}
+
+.light .text-emerald-400 {
+  color: #15803D !important;
+}
+
+.light .text-blue-400 {
+  color: #1D4ED8 !important;
+}
+
+.light .text-[#F5F5F5] {
+  color: #0F172A !important;
+}
+
+/* Tabs */
+.light button[role="tab"] {
+  border-color: #E2E8F0 !important;
+  color: #64748B !important;
+}
+
+.light button[role="tab"][aria-selected="true"],
+.light .border-gold {
+  border-color: #B45309 !important;
+  color: #B45309 !important;
+}
+
+/* FAQ items */
+.light .border-b.border-[#222] {
+  border-color: #E2E8F0 !important;
+}
+
+/* Live payouts list */
+.light .text-emerald-500 {
+  color: #16A34A !important;
+}
+
+.light .text-gold-light {
+  color: #D97706 !important;
+}
+
+/* Scrollbars in light mode */
+.light ::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #E2E8F0;
+  border: 1px solid #CBD5E1;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: #B45309;
+}
+

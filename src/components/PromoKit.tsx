@@ -35,7 +35,7 @@ export function PromoKit() {
           '🥳 [PARTY HOSTING]: "Hosting friends for the big games but have zero time to plan? This Watch Party Kit is an absolute cheat-code. 🏆 It has sweepstakes, a massive wall chart, trivia, and custom bingo sheets done for you. Effortless hosting in 2 minutes. Link in bio!"',
           '👶 [PARENTING]: "Screen-free World Cup entertainment that is actually educational. 🧩 Geographics, tournament trackers, and sports math. Kept my kids focused and quiet for 3 hours without an iPad. Best $18 I\'ve spent all summer. Grab the printable set in my bio."'
         ],
-        linkPlaceholder: 'https://docs.google.com/document/d/YOUR_DOC_ID_HERE/edit?usp=sharing'
+        linkPlaceholder: 'https://drive.google.com/drive/folders/1-xvJa4PNSrMoxvMVipuHYrpv3HKiWarf?usp=sharing'
       }
     },
     {
@@ -53,7 +53,7 @@ export function PromoKit() {
           '📱 24 Story layout templates (Designed for high tap-rates)',
           '📊 Dynamic animated countdown timers for the tournament'
         ],
-        linkPlaceholder: 'https://drive.google.com/drive/folders/YOUR_DRIVE_FOLDER_ID_HERE?usp=sharing'
+        linkPlaceholder: 'https://drive.google.com/drive/folders/1-xvJa4PNSrMoxvMVipuHYrpv3HKiWarf?usp=sharing'
       }
     },
     {
@@ -71,7 +71,7 @@ export function PromoKit() {
           '📈 STEP 3: Embed your customized affiliate link in your link-in-bio, link trees, or blog banners.',
           '⚡ PRO TIP: Pin a video featuring the "Peace Treaty" or the "Host Trivia Bingo" — these are high-viral screenshot magnets.'
         ],
-        linkPlaceholder: 'https://docs.google.com/document/d/YOUR_GUIDE_DOC_ID_HERE/edit?usp=sharing'
+        linkPlaceholder: 'https://drive.google.com/drive/folders/1-xvJa4PNSrMoxvMVipuHYrpv3HKiWarf?usp=sharing'
       }
     },
     {
@@ -89,7 +89,7 @@ export function PromoKit() {
           '🔥 "The effortless host cheat-code for the summer matches."',
           '🧠 "Screen-free sports activity that kept my kids occupied for hours today."'
         ],
-        linkPlaceholder: 'https://docs.google.com/spreadsheets/d/YOUR_HOOK_SHEET_ID_HERE/edit?usp=sharing'
+        linkPlaceholder: 'https://drive.google.com/drive/folders/1-xvJa4PNSrMoxvMVipuHYrpv3HKiWarf?usp=sharing'
       }
     }
   ];
@@ -229,15 +229,23 @@ export function PromoKit() {
                   </div>
 
                   {/* Asset download reference link */}
-                  <div className="bg-[#0A0A0A] border border-[#333] p-4 rounded-sm">
-                    <span className="block text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-1.5">
-                      Link for your setup (Edit/replace this in code):
+                  <div className="bg-[#111] border border-gold/30 p-4 rounded-sm relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gold/5 rounded-full blur-xl pointer-events-none" />
+                    <span className="block text-[9px] font-mono text-gold uppercase tracking-widest mb-1.5 font-bold">
+                      🔓 SECURED PARTNER ACCESS (SIGNED-UP MEMBERS ONLY):
                     </span>
-                    <div className="flex items-center justify-between gap-4 font-mono text-xs text-slate-300 bg-[#161616] border border-[#333] px-3 py-2 rounded-sm select-all truncate">
-                      <span className="truncate">{kitTiles.find(t => t.id === activeTile)?.details.linkPlaceholder}</span>
-                      <span className="text-[10px] bg-[#0A0A0A] text-slate-400 font-sans px-2 py-0.5 rounded-sm uppercase">
-                        Placeholder
-                      </span>
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 font-mono text-xs text-slate-300">
+                      <div className="flex-1 min-w-0 bg-[#0A0A0A] border border-[#222] px-3 py-2 rounded-sm select-all truncate text-[11px] text-slate-400">
+                        {kitTiles.find(t => t.id === activeTile)?.details.linkPlaceholder}
+                      </div>
+                      <a 
+                        href="https://drive.google.com/drive/folders/1-xvJa4PNSrMoxvMVipuHYrpv3HKiWarf?usp=sharing"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="cta-btn bg-gold text-black text-[10px] font-sans font-bold uppercase tracking-wider py-2 px-4 rounded-sm flex items-center justify-center gap-1.5 shrink-0 transition-all text-center"
+                      >
+                        Launch Drive Folder <ExternalLink className="w-3 h-3" />
+                      </a>
                     </div>
                   </div>
 

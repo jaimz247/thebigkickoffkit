@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   DollarSign, 
@@ -22,7 +22,13 @@ import {
   Users,
   X,
   Lightbulb,
-  Mail
+  Mail,
+  Star,
+  Share2,
+  Video,
+  MessageCircle,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 // Import custom modular components
@@ -32,6 +38,7 @@ import { ProductCard, ComingSoonCard } from './components/ProductCard';
 import { CommissionTable } from './components/CommissionTable';
 import { PromoKit } from './components/PromoKit';
 import { FAQSection } from './components/FAQ';
+import { addNewsletterSubscriber } from './firebase';
 
 const TICKER_PAYOUTS = [
   { user: "@alex_creates", amount: "$54.00", product: "BKK Bundle", time: "2m ago" },
@@ -70,13 +77,54 @@ export default function App() {
     }, 4000);
   };
 
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail.trim() || isSubmittingNewsletter) return;
+
+    setIsSubmittingNewsletter(true);
+    setNewsletterError(null);
+    try {
+      await addNewsletterSubscriber(newsletterEmail.trim());
+      setIsNewsletterSuccess(true);
+      addToast(`🚀 Success! Fresh weekly promo kits are now routed to ${newsletterEmail.trim()}`);
+      setNewsletterEmail('');
+    } catch (err: any) {
+      console.error(err);
+      setNewsletterError('Subscription failed. Please try again.');
+    } finally {
+      setIsSubmittingNewsletter(false);
+    }
+  };
+
   // Bottom Sticky CTA and Quick Tips states
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [currentTipIndex, setCurrentTipIndex] = useState(0);
   const [showTip, setShowTip] = useState(true);
+  const [isAtTop, setIsAtTop] = useState(true);
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isQuickActionsOpen, setIsQuickActionsOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isPrintReady, setIsPrintReady] = useState(false);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [isSubmittingNewsletter, setIsSubmittingNewsletter] = useState(false);
+  const [newsletterError, setNewsletterError] = useState<string | null>(null);
+  const [isNewsletterSuccess, setIsNewsletterSuccess] = useState(false);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.remove('light');
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     const handleScroll = () => {
+      // Check if at the very top of the page
+      setIsAtTop(window.scrollY < 20);
+
       // Show sticky bar after scrolling past 500px (past Hero section)
       if (window.scrollY > 500) {
         setShowStickyBar(true);
@@ -95,6 +143,14 @@ export default function App() {
     setTimeout(() => setCopiedNotification(null), 2500);
   };
 
+  const scrollToSignup = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const signupSection = document.getElementById('signup');
+    if (signupSection) {
+      signupSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-[#F5F5F5] flex flex-col font-sans selection:bg-gold selection:text-[#0A0A0A] overflow-x-hidden antialiased">
       
@@ -102,7 +158,7 @@ export default function App() {
       <div className="bg-[#1a0f0f] text-white border-b border-gold/30 text-[10px] sm:text-[11px] font-mono py-2.5 px-4 text-center relative z-50 flex flex-wrap items-center justify-center gap-2">
         <span className="inline-block w-2 h-2 rounded-full bg-red-500 animate-pulse shrink-0" />
         <span className="font-bold tracking-wider uppercase text-red-400">🚨 World Cup Peak Campaign:</span>
-        <span className="text-slate-300">The tournament wraps up in less than 2 weeks. Organic search & host buying urgency are at an absolute peak right now! Secure your partner cookie links today.</span>
+        <span className="text-slate-300">The tournament wraps up in less than 2 weeks—organic search & watch-party urgency are at an absolute peak right now! Plus, these products are 100% evergreen, letting your audience seamlessly reuse them for domestic leagues year-round.</span>
       </div>
 
       {/* 0. BRAND HEADER NAVIGATION */}
@@ -127,13 +183,33 @@ export default function App() {
             <a href="#faq" className="hover:text-gold transition-colors">FAQ Support</a>
           </nav>
 
-          <a
-            href="#signup"
-            className="cta-btn inline-flex items-center gap-1 px-4 py-2 text-xs"
-          >
-            Join Free
-            <ArrowRight className="w-3.5 h-3.5" />
-          </a>
+          <div className="flex items-center gap-3">
+            {/* Theme Toggle Button */}
+            <button
+              id="theme-toggle"
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className="p-2 rounded-sm border border-[#333] bg-[#161616]/80 hover:bg-[#222] hover:border-gold/30 text-slate-400 hover:text-gold transition-all duration-300 flex items-center justify-center cursor-pointer"
+              title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              aria-label={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              {isDarkMode ? (
+                <Sun className="w-4 h-4 text-gold" />
+              ) : (
+                <Moon className="w-4 h-4 text-slate-700" />
+              )}
+            </button>
+
+            <a
+              href="#signup"
+              onClick={scrollToSignup}
+              className={`cta-btn inline-flex items-center gap-1 px-4 py-2 text-xs transition-all duration-500 ${
+                isAtTop ? 'gold-pulse-btn' : ''
+              }`}
+            >
+              Join Free
+              <ArrowRight className="w-3.5 h-3.5" />
+            </a>
+          </div>
         </div>
       </header>
 
@@ -169,7 +245,10 @@ export default function App() {
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
               <a
                 href="#signup"
-                className="cta-btn w-full sm:w-auto px-8 py-4 text-sm"
+                onClick={scrollToSignup}
+                className={`cta-btn w-full sm:w-auto px-8 py-4 text-sm transition-all duration-500 ${
+                  isAtTop ? 'gold-pulse-btn shadow-[0_0_20px_rgba(212,175,55,0.4)]' : ''
+                }`}
               >
                 Become an Affiliate
               </a>
@@ -337,12 +416,142 @@ export default function App() {
               </p>
             </div>
 
+            {/* Prepare for Printing Ink-Saving Toggle */}
+            <div className="flex justify-center items-center gap-3 mb-12 font-mono text-xs relative z-10">
+              <span className={!isPrintReady ? "text-slate-200 font-bold" : "text-slate-500 transition-colors"}>
+                💻 Digital Display Layout
+              </span>
+              <button 
+                type="button"
+                onClick={() => setIsPrintReady(!isPrintReady)}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isPrintReady ? 'bg-emerald-500' : 'bg-slate-700'}`}
+                aria-label="Toggle Print Mode"
+              >
+                <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${isPrintReady ? 'translate-x-5' : 'translate-x-0'}`} />
+              </button>
+              <span className={isPrintReady ? "text-emerald-400 font-bold" : "text-slate-500 transition-colors"}>
+                🖨️ Prepare for Printing (Ink-Saving Layout)
+              </span>
+            </div>
+
             {/* Product card grids */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {PRODUCTS.map(product => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} isPrintReady={isPrintReady} />
               ))}
-              <ComingSoonCard />
+              <ComingSoonCard isPrintReady={isPrintReady} />
+            </div>
+
+          </div>
+        </section>
+
+        {/* SECTION 3.5: AFFILIATE SUCCESS STORIES */}
+        <section className="py-24 px-4 bg-[#0F0F0F] border-b border-[#333] relative overflow-hidden">
+          {/* Subtle design accents */}
+          <div className="absolute top-0 left-1/4 w-80 h-80 bg-gold/5 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="max-w-6xl mx-auto relative z-10">
+            
+            <div className="text-center mb-16">
+              <span className="badge border-gold/20 text-gold inline-flex items-center gap-2 mb-4">
+                <Star className="w-3.5 h-3.5 fill-gold text-gold" /> Verified Social Proof
+              </span>
+              <h2 className="text-3xl md:text-5xl font-serif italic uppercase text-[#F5F5F5] tracking-tight max-w-xl mx-auto mb-4">
+                Affiliate <span className="gold-gradient">Success Stories</span>
+              </h2>
+              <p className="text-[#A0A0A0] max-w-xl mx-auto text-sm font-sans">
+                See how top-tier creators and everyday soccer fans are turning World Cup buzz into passive income streams.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              
+              {/* Story 1 */}
+              <div className="panel bg-[#161616] p-6 flex flex-col justify-between border border-[#222] hover:border-gold/20 transition-all duration-300 relative group">
+                <div className="space-y-4">
+                  {/* Rating Stars */}
+                  <div className="flex gap-1 text-gold">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-gold text-gold" />
+                    ))}
+                  </div>
+                  
+                  <p className="text-xs md:text-sm text-slate-300 italic leading-relaxed font-sans">
+                    "Monetizing summer breaks has always been tough, but the Kick & Discover screen-free printable package virtually sold itself. Parents in my local Facebook groups were begging for the link to keep their kids occupied during game nights!"
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-[#222] flex items-center justify-between">
+                  <div>
+                    <h4 className="font-bold text-sm text-slate-100 font-sans">@parenting_grid</h4>
+                    <p className="text-[10px] text-slate-500 font-mono uppercase tracking-wider">Parenting & Crafts</p>
+                  </div>
+                  <div className="text-right">
+                    <span className="block text-xs font-mono text-emerald-400 font-bold">170 Referrals/wk</span>
+                    <span className="block text-[9px] text-slate-500 font-mono uppercase">Avg. $1,530+ Profit</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Story 2 */}
+              <div className="panel bg-[#161616] p-6 flex flex-col justify-between border border-gold/20 hover:border-gold/40 transition-all duration-300 relative group">
+                {/* Featured Badge */}
+                <span className="absolute -top-3 right-4 bg-gold text-black font-mono text-[8px] font-black tracking-widest px-2 py-0.5 rounded-sm uppercase">
+                  Top Earner
+                </span>
+                
+                <div className="space-y-4">
+                  {/* Rating Stars */}
+                  <div className="flex gap-1 text-gold">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-gold text-gold" />
+                    ))}
+                  </div>
+                  
+                  <p className="text-xs md:text-sm text-slate-300 italic leading-relaxed font-sans">
+                    "I posted a single story showing my friends playing the Watch Party Trivia Bingo while enjoying the opening game. The stories blew up! By the time the final whistle blew, I had already generated over 150 automatic commissions."
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-[#222] flex items-center justify-between">
+                  <div>
+                    <h4 className="font-bold text-sm text-slate-100 font-sans">@party_planner_dave</h4>
+                    <p className="text-[10px] text-slate-500 font-mono uppercase tracking-wider">Social Events & Hosting</p>
+                  </div>
+                  <div className="text-right">
+                    <span className="block text-xs font-mono text-emerald-400 font-bold">260 Referrals/wk</span>
+                    <span className="block text-[9px] text-slate-500 font-mono uppercase">Avg. $3,120+ Profit</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Story 3 */}
+              <div className="panel bg-[#161616] p-6 flex flex-col justify-between border border-[#222] hover:border-gold/20 transition-all duration-300 relative group">
+                <div className="space-y-4">
+                  {/* Rating Stars */}
+                  <div className="flex gap-1 text-gold">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-gold text-gold" />
+                    ))}
+                  </div>
+                  
+                  <p className="text-xs md:text-sm text-slate-300 italic leading-relaxed font-sans">
+                    "The Tournament Peace Treaty template is a pure viral magnet. I made a quick comedy reel showing me getting my football-crazed partner to sign it. It cleared 250k views and translated to hundreds of sales in a single weekend!"
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-[#222] flex items-center justify-between">
+                  <div>
+                    <h4 className="font-bold text-sm text-slate-100 font-sans">@couples_humor_hq</h4>
+                    <p className="text-[10px] text-slate-500 font-mono uppercase tracking-wider">Relationship Creators</p>
+                  </div>
+                  <div className="text-right">
+                    <span className="block text-xs font-mono text-emerald-400 font-bold">190 Referrals/wk</span>
+                    <span className="block text-[9px] text-slate-500 font-mono uppercase">Avg. $1,710+ Profit</span>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
           </div>
@@ -456,7 +665,7 @@ export default function App() {
                   The Summer Demand is <span className="gold-gradient">Exploding Right Now.</span>
                 </h3>
                 <p className="text-slate-400 text-xs md:text-sm leading-relaxed font-sans">
-                  World Cup 2026 runs for exactly <strong>39 days</strong>—and with <strong>less than 2 weeks remaining</strong>, we are in the peak final stretch of the tournament. Social feeds are overflowing with search intent for watch party ideas, relationship humor, and family learning items. Once the final whistle blows, this massive high-converting buying window closes for another four years. 
+                  World Cup 2026 runs for exactly <strong>39 days</strong>—and with <strong>less than 2 weeks remaining</strong>, we are in the peak final stretch. Social feeds are overflowing with buying intent right now! But here is the best part: <strong>these products are completely evergreen</strong>. Once the tournament finishes, your affiliate cookies remain locked, and our tournament-fluid templates seamlessly adapt to general weekend matches, Premier League watch parties, domestic leagues, and children's holiday sheets. You profit now during the peak, and keep collecting passive commission checks all year round.
                 </p>
                 <p className="text-slate-300 text-xs font-semibold leading-relaxed font-sans">
                   🚀 Do not leave this traffic on the table. Secure your partner cookies today and capture the wave of purchases.
@@ -558,37 +767,96 @@ export default function App() {
               *Registering on both is perfectly fine if you want to test checkout funnels for different customer segments!
             </p>
 
-            {/* Custom Link Setup Checklist for Affiliates */}
-            <div className="panel bg-panel p-6 max-w-xl mx-auto text-left space-y-4">
-              <h4 className="text-xs font-mono font-bold tracking-widest text-slate-400 uppercase border-b border-[#333] pb-2 flex justify-between items-center">
-                <span>🔗 Your Quick Integration Swipes</span>
-                <span className="text-slate-500 font-normal lowercase">Click link to copy</span>
-              </h4>
-              
-              <div className="space-y-2 text-xs">
-                <div>
-                  <label className="block text-[10px] font-mono text-slate-500 uppercase mb-1">Gumroad Referral Register:</label>
-                  <div 
-                    onClick={() => handleCopyLinkPlaceholder('https://jaimzz.gumroad.com/affiliates', 'Gumroad')}
-                    className="bg-[#0A0A0A] border border-[#333] px-3 py-2 rounded-sm flex items-center justify-between cursor-pointer hover:border-gold/35 transition-all font-mono text-slate-400 truncate"
-                  >
-                    <span className="truncate">https://jaimzz.gumroad.com/affiliates</span>
-                    <span className="text-[9px] bg-[#0A0A0A] px-2 py-0.5 rounded-sm text-gold uppercase shrink-0 font-sans font-bold">
-                      {copiedNotification === 'Gumroad' ? 'Copied!' : 'Copy'}
-                    </span>
+            {/* Custom Link Setup Checklist for Affiliates & Shareable Promo Codes */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto pt-6 text-left">
+              {/* Custom Link Setup Checklist */}
+              <div className="panel bg-panel p-6 space-y-4 shadow-xl">
+                <h4 className="text-xs font-mono font-bold tracking-widest text-slate-400 uppercase border-b border-[#333] pb-2 flex justify-between items-center">
+                  <span>🔗 Your Quick Integration Swipes</span>
+                  <span className="text-slate-500 font-normal lowercase">Click to copy</span>
+                </h4>
+                
+                <div className="space-y-3 text-xs">
+                  <div>
+                    <label className="block text-[10px] font-mono text-slate-500 uppercase mb-1">Gumroad Referral Register:</label>
+                    <div 
+                      onClick={() => handleCopyLinkPlaceholder('https://jaimzz.gumroad.com/affiliates', 'Gumroad')}
+                      className="bg-[#0A0A0A] border border-[#333] px-3 py-2 rounded-sm flex items-center justify-between cursor-pointer hover:border-gold/35 transition-all font-mono text-slate-400 truncate"
+                    >
+                      <span className="truncate">https://jaimzz.gumroad.com/affiliates</span>
+                      <span className="text-[9px] bg-[#0A0A0A] px-2 py-0.5 rounded-sm text-gold uppercase shrink-0 font-sans font-bold">
+                        {copiedNotification === 'Gumroad' ? 'Copied!' : 'Copy'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-mono text-slate-500 uppercase mb-1">Payhip Referral Register:</label>
+                    <div 
+                      onClick={() => handleCopyLinkPlaceholder('https://payhip.com/auth/register/af6a43b6c22f1a1', 'Payhip')}
+                      className="bg-[#0A0A0A] border border-[#333] px-3 py-2 rounded-sm flex items-center justify-between cursor-pointer hover:border-gold/35 transition-all font-mono text-slate-400 truncate"
+                    >
+                      <span className="truncate">https://payhip.com/auth/register/af6a43b6c22f1a1</span>
+                      <span className="text-[9px] bg-[#0A0A0A] px-2 py-0.5 rounded-sm text-gold uppercase shrink-0 font-sans font-bold">
+                        {copiedNotification === 'Payhip' ? 'Copied!' : 'Copy'}
+                      </span>
+                    </div>
                   </div>
                 </div>
+              </div>
 
-                <div>
-                  <label className="block text-[10px] font-mono text-slate-500 uppercase mb-1">Payhip Referral Register:</label>
-                  <div 
-                    onClick={() => handleCopyLinkPlaceholder('https://payhip.com/auth/register/af6a43b6c22f1a1', 'Payhip')}
-                    className="bg-[#0A0A0A] border border-[#333] px-3 py-2 rounded-sm flex items-center justify-between cursor-pointer hover:border-gold/35 transition-all font-mono text-slate-400 truncate"
-                  >
-                    <span className="truncate">https://payhip.com/auth/register/af6a43b6c22f1a1</span>
-                    <span className="text-[9px] bg-[#0A0A0A] px-2 py-0.5 rounded-sm text-gold uppercase shrink-0 font-sans font-bold">
-                      {copiedNotification === 'Payhip' ? 'Copied!' : 'Copy'}
-                    </span>
+              {/* Shareable Customer Promo Codes */}
+              <div className="panel bg-panel p-6 space-y-4 shadow-xl">
+                <h4 className="text-xs font-mono font-bold tracking-widest text-slate-400 uppercase border-b border-[#333] pb-2 flex justify-between items-center">
+                  <span>🎟️ Shareable Promo Codes</span>
+                  <span className="text-slate-500 font-normal lowercase">Click code to copy</span>
+                </h4>
+                
+                <p className="text-[11px] text-slate-400 leading-relaxed font-sans">
+                  Share these high-converting discount codes with your customers to boost conversion rates. Your 50% commission automatically applies to the discounted price!
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  {/* Code 1 */}
+                  <div className="space-y-1">
+                    <span className="block text-[8px] font-mono text-slate-500 uppercase truncate">10% Off Sitewide</span>
+                    <div 
+                      onClick={() => handleCopyLinkPlaceholder('WORLD10', 'WORLD10')}
+                      className="bg-[#0A0A0A] border border-dashed border-[#444] hover:border-gold/40 px-2.5 py-2 rounded-sm flex items-center justify-between cursor-pointer transition-all font-mono text-slate-300 font-bold"
+                    >
+                      <span className="text-[10px]">WORLD10</span>
+                      <span className="text-[8px] bg-gold/10 px-1 py-0.5 rounded-xs text-gold uppercase tracking-wider font-sans font-normal shrink-0">
+                        {copiedNotification === 'WORLD10' ? 'Copied!' : 'Copy'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Code 2 */}
+                  <div className="space-y-1">
+                    <span className="block text-[8px] font-mono text-slate-500 uppercase truncate">15% Off Watch Party</span>
+                    <div 
+                      onClick={() => handleCopyLinkPlaceholder('KICKOFF15', 'KICKOFF15')}
+                      className="bg-[#0A0A0A] border border-dashed border-[#444] hover:border-gold/40 px-2.5 py-2 rounded-sm flex items-center justify-between cursor-pointer transition-all font-mono text-slate-300 font-bold"
+                    >
+                      <span className="text-[10px]">KICKOFF15</span>
+                      <span className="text-[8px] bg-gold/10 px-1 py-0.5 rounded-xs text-gold uppercase tracking-wider font-sans font-normal shrink-0">
+                        {copiedNotification === 'KICKOFF15' ? 'Copied!' : 'Copy'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Code 3 */}
+                  <div className="space-y-1">
+                    <span className="block text-[8px] font-mono text-slate-500 uppercase truncate">20% Off Couples Kit</span>
+                    <div 
+                      onClick={() => handleCopyLinkPlaceholder('OFFSIDE20', 'OFFSIDE20')}
+                      className="bg-[#0A0A0A] border border-dashed border-[#444] hover:border-gold/40 px-2.5 py-2 rounded-sm flex items-center justify-between cursor-pointer transition-all font-mono text-slate-300 font-bold"
+                    >
+                      <span className="text-[10px]">OFFSIDE20</span>
+                      <span className="text-[8px] bg-gold/10 px-1 py-0.5 rounded-xs text-gold uppercase tracking-wider font-sans font-normal shrink-0">
+                        {copiedNotification === 'OFFSIDE20' ? 'Copied!' : 'Copy'}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -615,32 +883,48 @@ export default function App() {
                 We bundle high-converting swipe templates, raw vertical video clips, viral gameday memes, and watch-party worksheets every Wednesday. Zero spam—just raw fuel to feed your channels.
               </p>
 
-              <form 
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const target = e.target as HTMLFormElement;
-                  const emailInput = target.elements.namedItem('affiliate_email') as HTMLInputElement;
-                  if (emailInput && emailInput.value) {
-                    addToast(`🚀 Success! Fresh weekly promo kits are now routed to ${emailInput.value}`);
-                    emailInput.value = '';
-                  }
-                }}
-                className="flex flex-col sm:flex-row gap-3 font-sans"
-              >
-                <input
-                  name="affiliate_email"
-                  type="email"
-                  required
-                  placeholder="Enter your partner email address..."
-                  className="flex-1 bg-[#0A0A0A] border border-[#333] hover:border-slate-700 focus:border-gold px-4 py-3 text-xs rounded-sm text-slate-200 placeholder-slate-600 focus:outline-none transition-all font-mono"
-                />
-                <button
-                  type="submit"
-                  className="cta-btn text-xs font-bold tracking-wider uppercase font-mono px-6 py-3 cursor-pointer shrink-0 transition-all hover:bg-gold-light"
+              {isNewsletterSuccess ? (
+                <div className="p-4 bg-gold/5 border border-gold/20 rounded-sm text-center sm:text-left font-sans">
+                  <p className="text-sm font-serif italic text-gold font-bold mb-1">WELCOME TO THE TEAM! 🚀</p>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Fresh weekly promo kits, templates, and raw vertical video assets are now queued for delivery. Check your inbox this Wednesday!
+                  </p>
+                </div>
+              ) : (
+                <form 
+                  onSubmit={handleNewsletterSubmit}
+                  className="flex flex-col sm:flex-row gap-3 font-sans"
                 >
-                  Get Free Promo Kits
-                </button>
-              </form>
+                  <div className="flex-1 flex flex-col gap-1">
+                    <input
+                      type="email"
+                      required
+                      disabled={isSubmittingNewsletter}
+                      placeholder={isSubmittingNewsletter ? "Submitting..." : "Enter your partner email address..."}
+                      value={newsletterEmail}
+                      onChange={(e) => setNewsletterEmail(e.target.value)}
+                      className={`w-full bg-[#0A0A0A] border border-[#333] hover:border-slate-700 focus:border-gold px-4 py-3 text-xs rounded-sm text-slate-200 placeholder-slate-600 focus:outline-none transition-all font-mono ${isSubmittingNewsletter ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    />
+                    {newsletterError && (
+                      <p className="text-[10px] text-red-500 font-sans mt-1">{newsletterError}</p>
+                    )}
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isSubmittingNewsletter}
+                    className={`cta-btn text-xs font-bold tracking-wider uppercase font-mono px-6 py-3 cursor-pointer shrink-0 transition-all hover:bg-gold-light flex items-center justify-center gap-2 ${isSubmittingNewsletter ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    {isSubmittingNewsletter ? (
+                      <>
+                        <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      'Get Free Promo Kits'
+                    )}
+                  </button>
+                </form>
+              )}
               
               <p className="text-[10px] text-slate-500 font-mono mt-3 uppercase tracking-wider text-center sm:text-left">
                 🔒 GDPR Secure. No cost, unsubscribe with 1-click.
@@ -696,6 +980,7 @@ export default function App() {
                 </span>
                 <a
                   href="#signup"
+                  onClick={scrollToSignup}
                   className="cta-btn text-center text-xs px-6 py-2.5 uppercase font-mono tracking-widest font-bold w-full sm:w-auto shrink-0 shadow-lg"
                 >
                   Join & Get Paid 50%
@@ -751,6 +1036,245 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* FLOATING SHARE OPPORTUNITY BUTTON & OVERLAY DIALOG */}
+      <div className="fixed bottom-6 left-6 z-40 flex flex-col-reverse items-start gap-3 pointer-events-none">
+        
+        {/* Floating Share FAB */}
+        <button
+          onClick={() => {
+            const text = "Earn 50% cash commission promoting World Cup 2026 digital watch party printables! 🏆⚽ Instant payouts, pre-made assets, and high conversions.";
+            const url = window.location.href;
+            if (navigator.share) {
+              navigator.share({
+                title: "50% World Cup 2026 Affiliate Program",
+                text: text,
+                url: url
+              })
+              .then(() => addToast("🚀 Shared successfully!"))
+              .catch(() => setIsShareOpen(prev => !prev));
+            } else {
+              setIsShareOpen(prev => !prev);
+            }
+          }}
+          className="pointer-events-auto bg-[#161616] hover:bg-[#222] border border-gold/40 hover:border-gold px-4 py-2.5 rounded-full flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-[#F5F5F5] shadow-[0_12px_40px_rgba(0,0,0,0.8)] cursor-pointer transition-all active:scale-95"
+        >
+          <Share2 className="w-4 h-4 text-gold" />
+          <span>Share Program</span>
+        </button>
+
+        {/* Share Dialog Panel */}
+        <AnimatePresence>
+          {isShareOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 15, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.95 }}
+              className="pointer-events-auto w-72 md:w-80 panel bg-[#111] border border-gold/30 p-5 shadow-2xl space-y-4"
+            >
+              <div className="flex items-center justify-between border-b border-[#222] pb-2">
+                <span className="font-mono text-[10px] font-bold text-gold uppercase tracking-wider">
+                  📢 Spread the Word
+                </span>
+                <button
+                  onClick={() => setIsShareOpen(false)}
+                  className="text-slate-500 hover:text-slate-200 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="space-y-3 font-sans">
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  Earn <strong>50% commission</strong> referring creators. Share this high-conversion World Cup campaign using the quick links below:
+                </p>
+
+                {/* Direct Share Channels */}
+                <div className="grid grid-cols-3 gap-2 text-center pt-1 font-mono text-[10px] font-bold">
+                  {/* WhatsApp */}
+                  <a
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent("Check out this 50% World Cup affiliate program: " + window.location.href)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-[#121b15] border border-emerald-500/20 hover:border-emerald-500/50 text-emerald-400 rounded-sm transition-all"
+                  >
+                    WhatsApp
+                  </a>
+                  {/* Twitter / X */}
+                  <a
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent("Earn 50% commission promoting premium World Cup 2026 printables! 🏆⚽")}&url=${encodeURIComponent(window.location.href)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-[#161616] border border-slate-700/50 hover:border-slate-500 text-slate-200 rounded-sm transition-all"
+                  >
+                    Twitter / X
+                  </a>
+                  {/* LinkedIn */}
+                  <a
+                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-[#0d1624] border border-blue-500/20 hover:border-blue-500/50 text-blue-400 rounded-sm transition-all"
+                  >
+                    LinkedIn
+                  </a>
+                </div>
+
+                {/* Custom Copier Box */}
+                <div className="pt-2">
+                  <span className="block text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-1">
+                    Direct Invite Link:
+                  </span>
+                  <div 
+                    onClick={() => {
+                      navigator.clipboard.writeText(window.location.href);
+                      addToast("📋 Program invite link copied to clipboard!");
+                    }}
+                    className="bg-[#0A0A0A] border border-[#222] hover:border-gold/30 px-3 py-2 rounded-sm flex items-center justify-between cursor-pointer font-mono text-[11px] text-slate-400 select-all truncate transition-all"
+                  >
+                    <span className="truncate">{window.location.href}</span>
+                    <span className="text-[9px] bg-[#111] px-1.5 py-0.5 text-gold font-sans font-bold uppercase rounded-xs">
+                      Copy
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+      </div>
+
+      {/* MOBILE-ONLY QUICK ACTION OVERLAY (Top 3 Platforms for Current Stage) */}
+      <div className="md:hidden fixed bottom-6 right-6 z-40 flex flex-col-reverse items-end gap-3 pointer-events-none">
+        {/* Floating Quick Action FAB */}
+        <button
+          onClick={() => setIsQuickActionsOpen(prev => !prev)}
+          className="pointer-events-auto bg-gradient-to-r from-amber-500 to-gold hover:from-amber-600 hover:to-gold-light text-[#0A0A0A] px-4 py-2.5 rounded-full flex items-center gap-1.5 text-xs font-mono font-black uppercase tracking-widest shadow-[0_8px_30px_rgba(212,175,55,0.4)] cursor-pointer transition-all active:scale-95 animate-bounce"
+          style={{ animationDuration: '3s' }}
+        >
+          <Zap className="w-4 h-4 fill-current stroke-[3]" />
+          <span>⚡ Gameday Hacks</span>
+        </button>
+
+        {/* Quick Action Drawer Panel */}
+        <AnimatePresence>
+          {isQuickActionsOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.9 }}
+              className="pointer-events-auto w-[92vw] max-w-sm panel bg-[#121212] border-2 border-gold/40 p-5 shadow-2xl space-y-4"
+            >
+              {/* Header */}
+              <div className="flex items-start justify-between border-b border-[#222] pb-2">
+                <div>
+                  <span className="font-mono text-[9px] font-bold text-gold uppercase tracking-wider block">
+                    🏆 Tournament Final Matchweeks
+                  </span>
+                  <h3 className="text-sm font-serif italic uppercase text-slate-100 font-bold tracking-tight">
+                    Current Stage: <span className="text-emerald-400">Knockout Stage (Hype Peak)</span>
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setIsQuickActionsOpen(false)}
+                  className="text-slate-500 hover:text-slate-200 p-1 rounded-full hover:bg-white/5 transition-all"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <p className="text-[11px] text-slate-400 leading-relaxed font-sans">
+                Conversion rates are peaking at <strong>12.4%</strong> during match hours! Post these top 3 high-converting campaign combinations right now:
+              </p>
+
+              {/* Top 3 Platforms Grid */}
+              <div className="space-y-3">
+                {/* Platform 1 */}
+                <div className="p-3 rounded-sm bg-[#181818] border border-gold/15 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 rounded-sm bg-[#222] border border-gold/20 flex items-center justify-center text-gold">
+                        <Video className="w-3 h-3" />
+                      </div>
+                      <span className="text-xs font-bold text-slate-200 font-sans">1. Instagram Reels</span>
+                    </div>
+                    <span className="text-[9px] font-mono font-bold bg-emerald-950/40 border border-emerald-900/30 text-emerald-400 px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
+                      10x Sales Peak
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 leading-normal font-sans">
+                    <strong>Niche:</strong> Couples Humor. Pitch "Offside, Darling (OD)" Treaty templates. Perfect for post-match reactions.
+                  </p>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText("My partner signed a legally binding Peace Treaty for the World Cup knockout games... 📜✍️ Game on! Check my bio link.");
+                      addToast("📋 Copied Reels caption to clipboard!");
+                    }}
+                    className="w-full bg-[#222] hover:bg-[#333] hover:border-gold/30 border border-[#333] py-1.5 px-2.5 rounded-sm text-[9px] font-mono text-gold font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-colors"
+                  >
+                    <span>Copy Reels Caption Hook</span>
+                  </button>
+                </div>
+
+                {/* Platform 2 */}
+                <div className="p-3 rounded-sm bg-[#181818] border border-gold/15 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 rounded-sm bg-[#222] border border-gold/20 flex items-center justify-center text-gold">
+                        <MessageCircle className="w-3 h-3" />
+                      </div>
+                      <span className="text-xs font-bold text-slate-200 font-sans">2. WhatsApp Group Chats</span>
+                    </div>
+                    <span className="text-[9px] font-mono font-bold bg-emerald-950/40 border border-emerald-900/30 text-emerald-400 px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
+                      8.5x Sales Peak
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 leading-normal font-sans">
+                    <strong>Niche:</strong> Soccer Chats / Friends. Pitch "Watch Party Kit (BKK)" trivia/bingo files directly before match kicks off.
+                  </p>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText("Who's hosting the match today? Just found this epic Watch Party Pack with trivia, sweepstakes, and interactive gameday bingo sheets: Check this out! ⚽🍻");
+                      addToast("📋 Copied WhatsApp swipe text!");
+                    }}
+                    className="w-full bg-[#222] hover:bg-[#333] hover:border-gold/30 border border-[#333] py-1.5 px-2.5 rounded-sm text-[9px] font-mono text-gold font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-colors"
+                  >
+                    <span>Copy Group Chat Invite Msg</span>
+                  </button>
+                </div>
+
+                {/* Platform 3 */}
+                <div className="p-3 rounded-sm bg-[#181818] border border-gold/15 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 rounded-sm bg-[#222] border border-gold/20 flex items-center justify-center text-gold">
+                        <TrendingUp className="w-3 h-3" />
+                      </div>
+                      <span className="text-xs font-bold text-slate-200 font-sans">3. TikTok Trending Content</span>
+                    </div>
+                    <span className="text-[9px] font-mono font-bold bg-emerald-950/40 border border-emerald-900/30 text-emerald-400 px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
+                      8.2x Sales Peak
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 leading-normal font-sans">
+                    <strong>Niche:</strong> Parenting. Pitch "Kick & Discover (KD)" screen-free activities. Parents need matchweek sanity savers!
+                  </p>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText("The absolute best $18 screen-free World Cup activity pack that kept my soccer-crazed kids hyper-engaged for hours today! 🗺️🧠 Link in bio.");
+                      addToast("📋 Copied TikTok hook text!");
+                    }}
+                    className="w-full bg-[#222] hover:bg-[#333] hover:border-gold/30 border border-[#333] py-1.5 px-2.5 rounded-sm text-[9px] font-mono text-gold font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-colors"
+                  >
+                    <span>Copy TikTok Caption Swipe</span>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* FLOATING TOAST NOTIFICATIONS */}
       <div className="fixed top-6 right-6 z-50 flex flex-col gap-3 max-w-sm w-[90%] pointer-events-none">
